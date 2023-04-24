@@ -23,12 +23,12 @@ function App() {
             }
             try{
               addDoc(ref, data)
-              const timeout = setTimeout(() => {
-                // 👇️ redirects to an external URL
-                window.location.replace('https://www.facebook.com/photo/?fbid=595036837529214');
-              }, 3000);
+              // const timeout = setTimeout(() => {
+              //   // 👇️ redirects to an external URL
+              //   window.location.replace('https://www.facebook.com/photo/?fbid=595036837529214');
+              // }, 3000);
           
-              return () => clearTimeout(timeout);
+              // return () => clearTimeout(timeout);
             }catch(err){
               console.log("err-->",err)
             }
