@@ -94,7 +94,7 @@ function App() {
 
   return (
     <div className="App">
-      <h1>Find girls & boys for dating near you</h1>
+      <h1>Find boys & girls for dating near you</h1>
       <div className="search-bar">
         <input
           type="text"
